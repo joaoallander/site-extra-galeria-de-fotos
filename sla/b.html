@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos Premium</title>
+    <link rel="stylesheet" href="b.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-camera-retro"></i>
+                <h1>PhotoVault</h1>
+            </div>
+            <div class="header-actions">
+                <button class="search-btn" onclick="toggleSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="upload-btn" onclick="openUploadModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>Upload</span>
+                </button>
+                <div class="profile">
+                    <img src="/placeholder.svg?height=40&width=40" alt="Profile" class="profile-img">
+                </div>
+            </div>
+        </div>
+        <div class="search-bar" id="searchBar">
+            <input type="text" placeholder="Buscar fotos..." id="searchInput">
+            <button onclick="searchPhotos()"><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-category="all">
+                    <i class="fas fa-images"></i>
+                    <span>Todas as Fotos</span>
+                    <span class="count">247</span>
+                </a>
+                <a href="#" class="nav-item" data-category="favorites">
+                    <i class="fas fa-heart"></i>
+                    <span>Favoritas</span>
+                    <span class="count">32</span>
+                </a>
+                <a href="#" class="nav-item" data-category="recent">
+                    <i class="fas fa-clock"></i>
+                    <span>Recentes</span>
+                    <span class="count">15</span>
+                </a>
+                <a href="#" class="nav-item" data-category="albums">
+                    <i class="fas fa-folder"></i>
+                    <span>Álbuns</span>
+                    <span class="count">8</span>
+                </a>
+                <a href="#" class="nav-item" data-category="shared">
+                    <i class="fas fa-share-alt"></i>
+                    <span>Compartilhadas</span>
+                    <span class="count">12</span>
+                </a>
+                <a href="#" class="nav-item" data-category="trash">
+                    <i class="fas fa-trash"></i>
+                    <span>Lixeira</span>
+                    <span class="count">5</span>
+                </a>
+            </nav>
+
+            <div class="storage-info">
+                <div class="storage-header">
+                    <i class="fas fa-cloud"></i>
+                    <span>Armazenamento</span>
+                </div>
+                <div class="storage-bar">
+                    <div class="storage-used" style="width: 68%"></div>
+                </div>
+                <div class="storage-text">6.8 GB de 10 GB usados</div>
+                <button class="upgrade-btn">Fazer Upgrade</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <div class="view-options">
+                    <h2 class="section-title">Todas as Fotos</h2>
+                    <div class="view-controls">
+                        <button class="view-btn active" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <select class="sort-select">
+                            <option value="date">Data</option>
+                            <option value="name">Nome</option>
+                            <option value="size">Tamanho</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Grid -->
+            <div class="photo-grid" id="photoGrid">
+                <!-- Photos will be dynamically loaded here -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-container">
+                <button class="load-more-btn" onclick="loadMorePhotos()">
+                    <i class="fas fa-plus"></i>
+                    Carregar Mais Fotos
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Photo Modal -->
+    <div class="modal" id="photoModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-nav">
+                <button class="nav-prev" onclick="prevPhoto()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-next" onclick="nextPhoto()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <img src="/placeholder.svg" alt="" class="modal-image" id="modalImage">
+            <div class="modal-info">
+                <h3 id="modalTitle">Nome da Foto</h3>
+                <div class="modal-actions">
+                    <button class="action-btn favorite" onclick="toggleFavorite()">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="action-btn share" onclick="sharePhoto()">
+                        <i class="fas fa-share"></i>
+                    </button>
+                    <button class="action-btn download" onclick="downloadPhoto()">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="action-btn delete" onclick="deletePhoto()">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content upload-modal">
+            <button class="modal-close" onclick="closeUploadModal()">&times;</button>
+            <div class="upload-area" id="uploadArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Arraste suas fotos aqui</h3>
+                <p>ou clique para selecionar arquivos</p>
+                <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                <button class="select-files-btn" onclick="document.getElementById('fileInput').click()">
+                    Selecionar Arquivos
+                </button>
+            </div>
+            <div class="upload-progress" id="uploadProgress" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <span class="progress-text" id="progressText">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="b.js"></script>
+</body>
+</html>

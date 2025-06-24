@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelHub - Galeria de Fotos</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="shortcut icon" href="../download-removebg-preview (2).png" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-camera"></i>
+                <span>PixelHub</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="#" class="nav-link active">Galeria</a>
+                <a href="#" class="nav-link">Álbuns</a>
+                <a href="#" class="nav-link">Favoritos</a>
+                <a href="#" class="nav-link">Recentes</a>
+            </div>
+
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar fotos..." id="searchInput">
+                </div>
+                <button class="upload-btn" id="uploadBtn">
+                    <i class="fas fa-plus"></i>
+                    Upload
+                </button>
+                <div class="profile-avatar">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>2,847</h3>
+                        <p>Total de Fotos</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>156</h3>
+                        <p>Favoritas</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>23</h3>
+                        <p>Álbuns</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>8.2 GB</h3>
+                        <p>Armazenamento</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="filter-container">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">Todas</button>
+                    <button class="filter-tab" data-filter="landscape"><a href="paisagens.html">paisagens</a></button>
+                    <button class="filter-tab" data-filter="portrait">Retratos</button>
+                    <button class="filter-tab" data-filter="nature">Natureza</button>
+                    <button class="filter-tab" data-filter="urban">Urbano</button>
+                </div>
+                
+                <div class="filter-controls">
+                    <select class="sort-select" id="sortSelect">
+                        <option value="newest">Mais Recentes</option>
+                        <option value="oldest">Mais Antigas</option>
+                        <option value="name">Nome A-Z</option>
+                        <option value="size">Tamanho</option>
+                    </select>
+                    
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" data-view="masonry">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery -->
+        <section class="gallery-section">
+            <div class="gallery-container">
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Paisagens -->
+               
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="portrait" data-id="2">
+                        <div class="photo-wrapper">
+                            <img src="../Por do sol ☀️.jpg" alt="por do sol" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite" title="Favoritar">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>por do sol</h4>
+                                    <p>23 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="nature" data-id="3">
+                        <div class="photo-wrapper">
+                            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=600&fit=crop" alt="Floresta Misteriosa" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite active" title="Remover dos Favoritos">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>Floresta Misteriosa</h4>
+                                    <p>22 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="urban" data-id="4">
+                        <div class="photo-wrapper">
+                            <img src="../download (5).jpg" alt="Cidade Noturna" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite" title="Favoritar">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>Paisagens</h4>
+                                    <p>21 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="landscape" data-id="5">
+                        <div class="photo-wrapper">
+                            <img src="../download (3).jpg" alt="Lago Sereno" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite" title="Favoritar">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>paisagens2</h4>
+                                    <p>20 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="portrait" data-id="6">
+                        <div class="photo-wrapper">
+                            <img src="../Cachoeira dos Três Patamares.jpg" alt="Retrato Masculino" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite" title="Favoritar">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>Cachoeira</h4>
+                                    <p>19 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="nature" data-id="7">
+                        <div class="photo-wrapper">
+                            <img src="../Killua.jpg" alt="Cachoeira Tropical" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite active" title="Remover dos Favoritos">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>anime</h4>
+                                    <p>18 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="urban" data-id="8">
+                        <div class="photo-wrapper">
+                            <img src="../beach.jpg" alt="Arquitetura Moderna" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite" title="Favoritar">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>Praia</h4>
+                                    <p>17 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="landscape" data-id="9">
+                        <div class="photo-wrapper">
+                            <img src="../download (7).jpg" alt="Campo de Flores" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite" title="Favoritar">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>noite escuro</h4>
+                                    <p>16 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="photo-card" data-category="portrait" data-id="10">
+                        <div class="photo-wrapper">
+                            <img src="../🏞.jpg" alt="Sorriso Radiante" loading="lazy">
+                            <div class="photo-overlay">
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite" title="Favoritar">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-info">
+                                    <h4>paisagens4</h4>
+                                    <p>15 de junho, 2025</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+              
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Photo Modal -->
+    <div class="modal" id="photoModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-image-container">
+                <img id="modalImage" src="/placeholder.svg" alt="">
+                <button class="modal-nav prev" id="prevPhoto">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="modal-nav next" id="nextPhoto">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="modal-info">
+                <div class="modal-details">
+                    <h3 id="modalTitle">Título da Foto</h3>
+                    <p id="modalDate">Data</p>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn favorite" id="modalFavorite">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="modal-btn share" id="modalShare">
+                        <i class="fas fa-share"></i>
+                    </button>
+                    <button class="modal-btn download" id="modalDownload">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="upload-modal" id="uploadModal">
+        <div class="upload-backdrop"></div>
+        <div class="upload-content">
+            <div class="upload-header">
+                <h3>Upload de Fotos</h3>
+                <button class="upload-close" id="closeUpload">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h4>Arraste suas fotos aqui</h4>
+                <p>ou clique para selecionar</p>
+                <input type="file" id="fileInput" multiple accept="image/*">
+                <button class="select-files-btn">Selecionar Arquivos</button>
+            </div>
+        </div>
+    </div>
+
+   
+</body>
+</html>

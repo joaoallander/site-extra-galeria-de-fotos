@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+
+        .overlay-content {
+            text-align: center;
+            color: white;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .overlay-content {
+            transform: translateY(0);
+        }
+
+        .overlay h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .overlay p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .view-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .gallery-item img {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                margin-bottom: 30px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .gallery-item img {
+                height: 180px;
+            }
+            
+            .overlay h3 {
+                font-size: 1.2rem;
+            }
+            
+            .overlay p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animação de entrada */
+        .gallery-item {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .gallery-item:nth-child(1) { animation-delay: 0.1s; }
+        .gallery-item:nth-child(2) { animation-delay: 0.2s; }
+        .gallery-item:nth-child(3) { animation-delay: 0.3s; }
+        .gallery-item:nth-child(4) { animation-delay: 0.4s; }
+        .gallery-item:nth-child(5) { animation-delay: 0.5s; }
+        .gallery-item:nth-child(6) { animation-delay: 0.6s; }
+        .gallery-item:nth-child(7) { animation-delay: 0.7s; }
+        .gallery-item:nth-child(8) { animation-delay: 0.8s; }
+        .gallery-item:nth-child(9) { animation-delay: 0.9s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Efeito de loading */
+        .loading {
+            position: relative;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Galeria de Fotos</h1>
+            <p>Uma coleção de momentos únicos e inspiradores</p>
+        </div>
+
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="./download (5).jpg" alt="Paisagem Natural" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Paisagem Natural</h3>
+                        <p>Beleza da natureza em sua forma mais pura</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="./Por do sol ☀️.jpg" alt="Arquitetura Moderna" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Arquitetura Moderna</h3>
+                        <p>Linhas contemporâneas e design inovador</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="./download (3).jpg" alt="Arte Urbana" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Arte Urbana</h3>
+                        <p>Expressão criativa nas ruas da cidade</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="/placeholder.svg?height=250&width=400" alt="Retrato Artístico" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Retrato Artístico</h3>
+                        <p>Capturando a essência e personalidade</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="/placeholder.svg?height=250&width=400" alt="Vida Selvagem" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Vida Selvagem</h3>
+                        <p>Animais em seu habitat natural</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="/placeholder.svg?height=250&width=400" alt="Gastronomia" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Gastronomia</h3>
+                        <p>Sabores e texturas em perfeita harmonia</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="/placeholder.svg?height=250&width=400" alt="Viagem e Aventura" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Viagem e Aventura</h3>
+                        <p>Descobrindo novos horizontes</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="/placeholder.svg?height=250&width=400" alt="Minimalismo" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Minimalismo</h3>
+                        <p>Simplicidade e elegância em cada detalhe</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="/placeholder.svg?height=250&width=400" alt="Fotografia Noturna" loading="lazy">
+                <div class="overlay">
+                    <div class="overlay-content">
+                        <h3>Fotografia Noturna</h3>
+                        <p>Luzes e sombras da cidade que nunca dorme</p>
+                        <button class="view-btn">Ver Detalhes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Adiciona interatividade aos botões
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const title = e.target.parentElement.querySelector('h3').textContent;
+                alert(`Visualizando: ${title}`);
+            });
+        });
+
+        // Lazy loading para imagens
+        const images = document.querySelectorAll('img[loading="lazy"]');
+        
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.remove('loading');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(img => {
+                img.classList.add('loading');
+                imageObserver.observe(img);
+            });
+        }
+    </script>
+</body>
+</html>

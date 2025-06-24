@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Galeria de Fotos</title>
+    <link rel="shortcut icon" href="../download-removebg-preview (2).png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-sidebar: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --accent-color: #6366f1;
+            --accent-hover: #5855eb;
+            --hover-color: #f1f5f9;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-sidebar: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #818cf8;
+            --accent-hover: #6366f1;
+            --hover-color: #334155;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            transform: translateX(-100%);
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            margin-bottom: 32px;
+            text-align: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .welcome-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--hover-color);
+            color: var(--accent-color);
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-count {
+            margin-left: auto;
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .nav-link.active .nav-count {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* Storage Info */
+        .storage-info {
+            margin-top: 32px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .storage-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .storage-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .storage-used {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 68%;
+        }
+
+        .storage-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .upgrade-btn {
+            width: 100%;
+            background: var(--gradient-secondary);
+            border: none;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            margin-left: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+        }
+
+        .main-content.sidebar-open {
+            margin-left: 280px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 24px;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-toggle:hover {
+            background: var(--hover-color);
+            transform: scale(1.05);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-bar {
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            width: 280px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            width: 320px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .clear-search {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .clear-search.show {
+            opacity: 1;
+        }
+
+        .clear-search:hover {
+            background: var(--hover-color);
+            color: var(--text-primary);
+        }
+
+        .theme-toggle {
+            background: var(--accent-color);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-primary);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .view-btn {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .view-btn.active,
+        .view-btn:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        /* Gallery Styles */
+        .gallery-container {
+            padding: 0 4px;
+        }
+
+        .search-results {
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+            display: none;
+        }
+
+        .search-results.show {
+            display: block;
+        }
+
+        .search-results-text {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .date-section {
+            margin-bottom: 48px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .date-section:nth-child(even) {
+            animation-delay: 0.1s;
+        }
+
+        .date-section:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+
+        .date-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            padding: 20px 24px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .date-icon {
+            color: var(--accent-color);
+            font-size: 18px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .gallery-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+
+        .gallery-grid.list-view .photo-item {
+            display: flex;
+            height: 120px;
+        }
+
+        .gallery-grid.list-view .photo-img {
+            width: 200px;
+            height: 100%;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .gallery-grid.list-view .photo-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            aspect-ratio: 4/3;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .photo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+
+        .photo-item:hover .photo-img {
+            transform: scale(1.1);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .photo-item:hover .photo-overlay {
+            transform: translateY(0);
+        }
+
+        .photo-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .photo-info {
+            font-size: 13px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .photo-actions {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .photo-item:hover .photo-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .favorite-btn.active {
+            color: #ef4444;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: var(--bg-primary);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: white;
+            padding: 16px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 20px;
+        }
+
+        .modal-nav:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-prev {
+            left: 20px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .modal-next {
+            right: 20px;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .modal-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: white;
+            padding: 32px 24px 24px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .modal-details {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(2px);
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--text-muted);
+        }
+
+        .no-results-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .no-results-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .no-results-subtitle {
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .loading {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 20px;
+            }
+
+            .search-bar {
+                width: 240px;
+            }
+
+            .search-bar:focus {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+            }
+
+            .main-content.sidebar-open {
+                margin-left: 0;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .header-left {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .header-controls {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .search-bar:focus {
+                width: 100%;
+            }
+
+            .view-controls {
+                align-self: center;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
+
+            .photo-item {
+                aspect-ratio: 1;
+            }
+
+            .date-header {
+                font-size: 18px;
+                padding: 16px 20px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .modal-content {
+                max-width: 95vw;
+                max-height: 95vh;
+            }
+
+            .modal-nav {
+                padding: 12px 8px;
+                font-size: 18px;
+            }
+
+            .modal-prev {
+                left: 10px;
+            }
+
+            .modal-next {
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 16px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .date-header {
+                font-size: 16px;
+                padding: 12px 16px;
+            }
+
+            .photo-overlay {
+                padding: 16px;
+            }
+
+            .photo-title {
+                font-size: 14px;
+            }
+
+            .photo-info {
+                font-size: 12px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .sidebar {
+                transform: translateX(0);
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-camera-retro"></i>
+                    </div>
+                </div>
+                <h1 class="welcome-text">Fotos</h1>
+                <p class="subtitle">Sua galeria pessoal</p>
+            </div>
+            
+            <nav>
+                <ul class="sidebar-nav">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" data-category="all">
+                            <span class="nav-icon"><i class="fas fa-images"></i></span>
+                            Todas as Fotos
+                            <span class="nav-count">247</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="albums">
+                            <span class="nav-icon"><i class="fas fa-folder"></i></span>
+                            Álbuns
+                            <span class="nav-count">12</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="favorites">
+                            <span class="nav-icon"><i class="fas fa-heart"></i></span>
+                            Favoritas
+                            <span class="nav-count">38</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="recent">
+                            <span class="nav-icon"><i class="fas fa-clock"></i></span>
+                            Recentes
+                            <span class="nav-count">24</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="device">
+                            <span class="nav-icon"><i class="fas fa-mobile-alt"></i></span>
+                            No Dispositivo
+                            <span class="nav-count">156</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="archive">
+                            <span class="nav-icon"><i class="fas fa-archive"></i></span>
+                            Arquivo
+                            <span class="nav-count">89</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-category="trash">
+                            <span class="nav-icon"><i class="fas fa-trash"></i></span>
+                            Lixeira
+                            <span class="nav-count">7</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="storage-info">
+                <div class="storage-header">
+                    <i class="fas fa-cloud"></i>
+                    Armazenamento
+                </div>
+                <div class="storage-bar">
+                    <div class="storage-used"></div>
+                </div>
+                <div class="storage-text">6.8 GB de 10 GB usados</div>
+                <button class="upgrade-btn">
+                    <i class="fas fa-crown"></i>
+                    Fazer Upgrade
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title">Galeria de Fotos</h1>
+                </div>
+                
+                <div class="header-controls">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Pesquisar fotos, álbuns, datas..." class="search-bar" id="searchBar">
+                        <button class="clear-search" id="clearSearch">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="view-controls">
+                        <button class="view-btn active" data-view="grid" title="Visualização em Grade">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" data-view="list" title="Visualização em Lista">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                    
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                        <span>Escuro</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="gallery-container">
+                <div class="search-results" id="searchResults">
+                    <div class="search-results-text" id="searchResultsText"></div>
+                </div>
+
+                <div id="galleryContent">
+                    <!-- Junho 2025 -->
+                    <section class="date-section" data-date="2025-06">
+                        <h2 class="date-header">
+                            <i class="fas fa-calendar-alt date-icon"></i>
+                            Junho 2025
+                        </h2>
+                        <div class="gallery-grid" id="gallery-2025-06">
+                            <div class="photo-item" data-src="/placeholder.svg?height=400&width=600" data-title="Paisagem Montanhosa" data-date="01/06/2025" data-category="natureza">
+                                <img src="../beach.jpg" alt="Paisagem" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title">Praia</div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        01/06/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="photo-item" data-src="/placeholder.svg?height=500&width=400" data-title="Arte Digital" data-date="02/06/2025" data-category="arte">
+                                <img src="../Killua.jpg" alt="Arte Digital" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title">Anime</div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        02/06/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn active" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="photo-item" data-src="/placeholder.svg?height=400&width=600" data-title="Pôr do Sol" data-date="03/06/2025" data-category="natureza">
+                                <img src="../Por do sol ☀️.jpg" alt="Pôr do Sol" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title">Pôr do Sol</div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        03/06/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Maio 2025 -->
+                    <section class="date-section" data-date="2025-05">
+                        <h2 class="date-header">
+                            <i class="fas fa-calendar-alt date-icon"></i>
+                            Maio 2025
+                        </h2>
+                        <div class="gallery-grid" id="gallery-2025-05">
+                            <div class="photo-item" data-src="/placeholder.svg?height=400&width=600" data-title="Praia Tropical" data-date="15/05/2025" data-category="viagem">
+                                <img src="../download (6).jpg" alt="Praia" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title">Anime</div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        15/05/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn active" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="photo-item" data-src="/placeholder.svg?height=500&width=400" data-title="Cachoeira" data-date="16/05/2025" data-category="natureza">
+                                <img src="../Cachoeira dos Três Patamares.jpg" alt="Cachoeira" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title">Cachoeira dos Três Patamares</div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        16/05/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="photo-item" data-src="/placeholder.svg?height=400&width=600" data-title="Céu Estrelado" data-date="17/05/2025" data-category="natureza">
+                                <img src="../download (5).jpg" alt="Céu Estrelado" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title">Céu Estrelado</div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        17/05/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="photo-item" data-src="/placeholder.svg?height=400&width=600" data-title="Aventura na Montanha" data-date="18/05/2025" data-category="aventura">
+                                <img src="../🏞.jpg" alt="Aventura" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title">paisagem</div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        18/05/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn active" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Abril 2025 -->
+                    <section class="date-section" data-date="2025-04">
+                        <h2 class="date-header">
+                            <i class="fas fa-calendar-alt date-icon"></i>
+                            Abril 2025
+                        </h2>
+                        <div class="gallery-grid" id="gallery-2025-04">
+                            <div class="photo-item" data-src="/placeholder.svg?height=400&width=600" data-title="Vista Panorâmica" data-date="24/04/2025" data-category="paisagem">
+                                <img src="../MJ.avif" alt="Vista Panorâmica" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title">Vista Panorâmica</div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        24/04/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="photo-item" data-src="/placeholder.svg?height=500&width=400" data-title="Personagem Anime" data-date="25/04/2025" data-category="arte">
+                                <img src="../@estamospodendo@ptparasempre@loveLULA.png" alt="Anime" class="photo-img">
+                                <div class="photo-overlay">
+                                    <div class="photo-title"></div>
+                                    <div class="photo-info">
+                                        <i class="fas fa-calendar"></i>
+                                        25/04/2025
+                                    </div>
+                                </div>
+                                <div class="photo-actions">
+                                    <button class="action-btn favorite-btn active" title="Favoritar">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn share-btn" title="Compartilhar">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn download-btn" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="no-results" id="noResults" style="display: none;">
+                    <div class="no-results-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="no-results-text">Nenhuma foto encontrada</div>
+                    <div class="no-results-subtitle">Tente usar termos diferentes na sua pesquisa</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para visualização de imagens -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="modal-nav modal-prev" id="modalPrev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="modal-nav modal-next" id="modalNext">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <img src="/placeholder.svg" alt="" class="modal-img" id="modalImg">
+            <div class="modal-info">
+                <div class="modal-title" id="modalTitle"></div>
+                <div class="modal-details" id="modalDetails"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let isDark = false;
+        let currentView = 'grid';
+        let currentCategory = 'all';
+        let currentModalIndex = 0;
+        let allPhotos = [];
+        let filteredPhotos = [];
+        let searchTimeout;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+            loadPhotos();
+        });
+
+        function initializeApp() {
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                isDark = savedTheme === 'dark';
+                updateTheme();
+            }
+
+            // Check for saved view preference
+            const savedView = localStorage.getItem('view');
+            if (savedView) {
+                currentView = savedView;
+                updateViewButtons();
+                updateGalleryView();
+            }
+        }
+
+        function setupEventListeners() {
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // Sidebar toggle for mobile
+            document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+            document.getElementById('overlay').addEventListener('click', closeSidebar);
+
+            // Search functionality
+            const searchBar = document.getElementById('searchBar');
+            const clearSearch = document.getElementById('clearSearch');
+            
+            searchBar.addEventListener('input', handleSearch);
+            searchBar.addEventListener('focus', () => {
+                searchBar.parentElement.classList.add('focused');
+            });
+            searchBar.addEventListener('blur', () => {
+                searchBar.parentElement.classList.remove('focused');
+            });
+            
+            clearSearch.addEventListener('click', clearSearchInput);
+
+            // Navigation menu
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', handleNavigation);
+            });
+
+            // View controls
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', handleViewChange);
+            });
+
+            // Modal functionality
+            document.getElementById('modalClose').addEventListener('click', closeModal);
+            document.getElementById('modalPrev').addEventListener('click', showPrevPhoto);
+            document.getElementById('modalNext').addEventListener('click', showNextPhoto);
+            document.getElementById('modal').addEventListener('click', handleModalClick);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyboard);
+
+            // Window resize
+            window.addEventListener('resize', handleResize);
+        }
+
+        function loadPhotos() {
+            allPhotos = [];
+            const photoItems = document.querySelectorAll('.photo-item');
+            
+            photoItems.forEach((item, index) => {
+                const photo = {
+                    element: item,
+                    src: item.dataset.src,
+                    title: item.dataset.title,
+                    date: item.dataset.date,
+                    category: item.dataset.category,
+                    index: index,
+                    favorite: item.querySelector('.favorite-btn').classList.contains('active')
+                };
+                allPhotos.push(photo);
+
+                // Add click event to photo
+                item.addEventListener('click', () => openModal(index));
+
+                // Add click events to action buttons
+                const favoriteBtn = item.querySelector('.favorite-btn');
+                const shareBtn = item.querySelector('.share-btn');
+                const downloadBtn = item.querySelector('.download-btn');
+
+                favoriteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFavorite(index);
+                });
+
+                shareBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sharePhoto(photo);
+                });
+
+                downloadBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    downloadPhoto(photo);
+                });
+            });
+
+            filteredPhotos = [...allPhotos];
+        }
+
+        function toggleTheme() {
+            isDark = !isDark;
+            updateTheme();
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        function updateTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            
+            body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            
+            if (isDark) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i><span>Claro</span>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i><span>Escuro</span>';
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const overlay = document.getElementById('overlay');
+
+            sidebar.classList.toggle('open');
+            mainContent.classList.toggle('sidebar-open');
+            overlay.classList.toggle('show');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const overlay = document.getElementById('overlay');
+
+            sidebar.classList.remove('open');
+            mainContent.classList.remove('sidebar-open');
+            overlay.classList.remove('show');
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.trim();
+            const clearBtn = document.getElementById('clearSearch');
+            
+            // Show/hide clear button
+            if (query) {
+                clearBtn.classList.add('show');
+            } else {
+                clearBtn.classList.remove('show');
+            }
+
+            // Debounce search
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        }
+
+        function performSearch(query) {
+            const searchResults = document.getElementById('searchResults');
+            const searchResultsText = document.getElementById('searchResultsText');
+            const galleryContent = document.getElementById('galleryContent');
+            const noResults = document.getElementById('noResults');
+
+            if (!query) {
+                // Show all photos
+                searchResults.classList.remove('show');
+                galleryContent.style.display = 'block';
+                noResults.style.display = 'none';
+                showAllSections();
+                return;
+            }
+
+            // Filter photos
+            const results = allPhotos.filter(photo => {
+                return photo.title.toLowerCase().includes(query.toLowerCase()) ||
+                       photo.category.toLowerCase().includes(query.toLowerCase()) ||
+                       photo.date.includes(query);
+            });
+
+            // Update UI
+            if (results.length > 0) {
+                searchResults.classList.add('show');
+                searchResultsText.textContent = `${results.length} foto(s) encontrada(s) para "${query}"`;
+                galleryContent.style.display = 'block';
+                noResults.style.display = 'none';
+                showSearchResults(results);
+            } else {
+                searchResults.classList.add('show');
+                searchResultsText.textContent = `Nenhuma foto encontrada para "${query}"`;
+                galleryContent.style.display = 'none';
+                noResults.style.display = 'block';
+            }
+        }
+
+        function showSearchResults(results) {
+            // Hide all sections first
+            document.querySelectorAll('.date-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show only sections with matching photos
+            const sectionsWithResults = new Set();
+            results.forEach(photo => {
+                const section = photo.element.closest('.date-section');
+                sectionsWithResults.add(section);
+            });
+
+            // Show sections and highlight matching photos
+            allPhotos.forEach(photo => {
+                photo.element.style.display = 'none';
+            });
+
+            results.forEach(photo => {
+                const section = photo.element.closest('.date-section');
+                section.style.display = 'block';
+                photo.element.style.display = 'block';
+            });
+        }
+
+        function showAllSections() {
+            document.querySelectorAll('.date-section').forEach(section => {
+                section.style.display = 'block';
+            });
+            allPhotos.forEach(photo => {
+                photo.element.style.display = 'block';
+            });
+        }
+
+        function clearSearchInput() {
+            const searchBar = document.getElementById('searchBar');
+            const clearBtn = document.getElementById('clearSearch');
+            
+            searchBar.value = '';
+            clearBtn.classList.remove('show');
+            performSearch('');
+            searchBar.focus();
+        }
+
+        function handleNavigation(e) {
+            e.preventDefault();
+            const category = e.currentTarget.dataset.category;
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            e.currentTarget.classList.add('active');
+
+            // Update page title
+            const pageTitle = document.querySelector('.page-title');
+            const categoryTitles = {
+                'all': 'Todas as Fotos',
+                'albums': 'Álbuns',
+                'favorites': 'Favoritas',
+                'recent': 'Recentes',
+                'device': 'No Dispositivo',
+                'archive': 'Arquivo',
+                'trash': 'Lixeira'
+            };
+            pageTitle.textContent = categoryTitles[category] || 'Galeria de Fotos';
+
+            currentCategory = category;
+            filterByCategory(category);
+
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
+        }
+
+        function filterByCategory(category) {
+            const searchBar = document.getElementById('searchBar');
+            
+            // Clear search when changing category
+            searchBar.value = '';
+            document.getElementById('clearSearch').classList.remove('show');
+            document.getElementById('searchResults').classList.remove('show');
+            document.getElementById('galleryContent').style.display = 'block';
+            document.getElementById('noResults').style.display = 'none';
+
+            if (category === 'all') {
+                showAllSections();
+                return;
+            }
+
+            if (category === 'favorites') {
+                const favoritePhotos = allPhotos.filter(photo => photo.favorite);
+                if (favoritePhotos.length > 0) {
+                    showSearchResults(favoritePhotos);
+                } else {
+                    document.getElementById('galleryContent').style.display = 'none';
+                    document.getElementById('noResults').style.display = 'block';
+                }
+                return;
+            }
+
+            if (category === 'recent') {
+                // Show only the most recent section
+                document.querySelectorAll('.date-section').forEach((section, index) => {
+                    section.style.display = index === 0 ? 'block' : 'none';
+                });
+                allPhotos.forEach(photo => {
+                    photo.element.style.display = 'block';
+                });
+                return;
+            }
+
+            // For other categories, show placeholder message
+            document.getElementById('galleryContent').style.display = 'none';
+            document.getElementById('noResults').style.display = 'block';
+            document.querySelector('.no-results-text').textContent = `Seção "${categoryTitles[category] || category}" em desenvolvimento`;
+            document.querySelector('.no-results-subtitle').textContent = 'Esta funcionalidade será implementada em breve';
+        }
+
+        function handleViewChange(e) {
+            const view = e.currentTarget.dataset.view;
+            currentView = view;
+            
+            updateViewButtons();
+            updateGalleryView();
+            localStorage.setItem('view', view);
+        }
+
+        function updateViewButtons() {
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-view="${currentView}"]`).classList.add('active');
+        }
+
+        function updateGalleryView() {
+            const galleries = document.querySelectorAll('.gallery-grid');
+            galleries.forEach(gallery => {
+                if (currentView === 'list') {
+                    gallery.classList.add('list-view');
+                } else {
+                    gallery.classList.remove('list-view');
+                }
+            });
+        }
+
+        function toggleFavorite(index) {
+            const photo = allPhotos[index];
+            const favoriteBtn = photo.element.querySelector('.favorite-btn');
+            
+            photo.favorite = !photo.favorite;
+            favoriteBtn.classList.toggle('active', photo.favorite);
+            
+            // Show notification
+            showNotification(photo.favorite ? 'Adicionado aos favoritos!' : 'Removido dos favoritos!');
+        }
+
+        function sharePhoto(photo) {
+            if (navigator.share) {
+                navigator.share({
+                    title: photo.title,
+                    text: `Confira esta foto: ${photo.title}`,
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showNotification('Link copiado para a área de transferência!');
+                }).catch(() => {
+                    showNotification('Não foi possível compartilhar a foto');
+                });
+            }
+        }
+
+        function downloadPhoto(photo) {
+            const link = document.createElement('a');
+            link.href = photo.src;
+            link.download = `${photo.title}.jpg`;
+            link.click();
+            showNotification('Download iniciado!');
+        }
+
+        function openModal(index) {
+            currentModalIndex = index;
+            const photo = allPhotos[index];
+            const modal = document.getElementById('modal');
+            const modalImg = document.getElementById('modalImg');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDetails = document.getElementById('modalDetails');
+
+            modalImg.src = photo.src;
+            modalImg.alt = photo.title;
+            modalTitle.textContent = photo.title;
+            modalDetails.innerHTML = `
+                <i class="fas fa-calendar"></i> ${photo.date} • 
+                <i class="fas fa-tag"></i> ${photo.category}
+            `;
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showPrevPhoto() {
+            currentModalIndex = (currentModalIndex - 1 + allPhotos.length) % allPhotos.length;
+            openModal(currentModalIndex);
+        }
+
+        function showNextPhoto() {
+            currentModalIndex = (currentModalIndex + 1) % allPhotos.length;
+            openModal(currentModalIndex);
+        }
+
+        function handleModalClick(e) {
+            if (e.target === e.currentTarget) {
+                closeModal();
+            }
+        }
+
+        function handleKeyboard(e) {
+            const modal = document.getElementById('modal');
+            
+            if (modal.classList.contains('show')) {
+                switch (e.key) {
+                    case 'Escape':
+                        closeModal();
+                        break;
+                    case 'ArrowLeft':
+                        showPrevPhoto();
+                        break;
+                    case 'ArrowRight':
+                        showNextPhoto();
+                        break;
+                }
+            }
+
+            // Global shortcuts
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'k':
+                        e.preventDefault();
+                        document.getElementById('searchBar').focus();
+                        break;
+                    case 'd':
+                        e.preventDefault();
+                        toggleTheme();
+                        break;
+                }
+            }
+        }
+
+        function handleResize() {
+            // Close sidebar on desktop
+            if (window.innerWidth > 768) {
+                closeSidebar();
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                z-index: 3000;
+                box-shadow: var(--shadow-lg);
+                font-weight: 500;
+                font-size: 14px;
+                animation: slideInRight 0.3s ease;
+                backdrop-filter: blur(10px);
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Add CSS animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize tooltips and other enhancements
+        function initializeEnhancements() {
+            // Add loading states
+            const images = document.querySelectorAll('.photo-img');
+            images.forEach(img => {
+                img.addEventListener('load', function() {
+                    this.classList.remove('loading');
+                });
+                img.addEventListener('error', function() {
+                    this.src = '/placeholder.svg?height=300&width=400&text=Erro+ao+carregar';
+                });
+            });
+
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Call enhancements after DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeEnhancements);
+
+        // Service Worker registration for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

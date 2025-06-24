@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Fotos</title>
+    <link rel="shortcut icon" href="../download-removebg-preview (2).png" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-sidebar: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #e1e5e9;
+            --accent-color: #6366f1;
+            --hover-color: #f1f3f5;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-sidebar: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-color: #404040;
+            --accent-color: #818cf8;
+            --hover-color: #363636;
+            --shadow: 0 2px 10px rgba(0,0,0,0.3);
+            --shadow-hover: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .welcome-text {
+            background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--hover-color);
+            color: var(--accent-color);
+            transform: translateX(4px);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            margin-left: 0;
+            transition: all 0.3s ease;
+        }
+
+        .main-content.sidebar-open {
+            margin-left: 280px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--hover-color);
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: var(--accent-color);
+            border: none;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .search-bar {
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Gallery Grid */
+        .gallery-container {
+            padding: 0 20px;
+        }
+
+        .date-section {
+            margin-bottom: 40px;
+        }
+
+        .date-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            padding: 15px 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: var(--bg-secondary);
+        }
+
+        .photo-item:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .photo-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .photo-item:hover .photo-img {
+            transform: scale(1.05);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+        .photo-item:hover .photo-overlay {
+            transform: translateY(0);
+        }
+
+        .photo-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .photo-info {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+            }
+
+            .main-content.sidebar-open {
+                margin-left: 0;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .photo-img {
+                height: 150px;
+            }
+
+            .welcome-text {
+                font-size: 20px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .sidebar {
+                transform: translateX(0);
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1 class="welcome-text">Bem-vindo à Galeria</h1>
+            </div>
+            
+            <nav>
+                <ul class="sidebar-nav">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <span class="nav-icon">📷</span>
+                            Fotos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">📚</span>
+                            Álbuns
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">🔔</span>
+                            Notificações
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">📱</span>
+                            No dispositivo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">📁</span>
+                            Arquivo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">🗑</span>
+                            Lixeira
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">➕</span>
+                            Criar novo
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <header class="header">
+                <button class="menu-toggle" id="menuToggle">☰</button>
+                
+                <div class="header-controls">
+                    <input type="text" placeholder="Pesquisar fotos..." class="search-bar" id="searchBar">
+                    <button class="theme-toggle" id="themeToggle">🌙 Escuro</button>
+                </div>
+            </header>
+
+            <div class="gallery-container">
+                <!-- Junho 2025 -->
+                <section class="date-section">
+                    <h2 class="date-header">01/junho 2025</h2>
+                    <div class="gallery-grid">
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop">
+                            <img src="../download (5).jpg" alt="Montanhas" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">Paisagem</div>
+                                <div class="photo-info">Capturada em 01/06/2025</div>
+                            </div>
+                        </div>
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop">
+                            <img src="../download (6).jpg" alt="Anime" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">Anime</div>
+                                <div class="photo-info">Ilustração moderna</div>
+                            </div>
+                        </div>
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop">
+                            <img src="../Por do sol ☀️.jpg" alt="Natureza" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">por do sol</div>
+                                <div class="photo-info">Fotografia natural</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Maio 2025 -->
+                <section class="date-section">
+                    <h2 class="date-header">15/maio 2025</h2>
+                    <div class="gallery-grid">
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop">
+                            <img src="../beach.jpg" alt="Pôr do sol" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">praia</div>
+                                <div class="photo-info">Cores incríveis do céu</div>
+                            </div>
+                        </div>
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop">
+                            <img src="../Cachoeira dos Três Patamares.jpg" alt="Floresta" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">cachoeira dos tres palmares </div>
+                                <div class="photo-info">Caminhada na natureza</div>
+                            </div>
+                        </div>
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=300&fit=crop">
+                            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=300&fit=crop" alt="Céu estrelado" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">ensolarado</div>
+                                <div class="photo-info">dia perfeito</div>
+                            </div>
+                        </div>
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=400&h=300&fit=crop">
+                            <img src="../🏞.jpg" alt="Aventura" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">paisagem2</div>
+                                <div class="photo-info">Explorando novos lugares</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Abril 2025 -->
+                <section class="date-section">
+                    <h2 class="date-header">24/abril 2025</h2>
+                    <div class="gallery-grid">
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="Montanha" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">Vista Panorâmica</div>
+                                <div class="photo-info">Do topo da montanha</div>
+                            </div>
+                        </div>
+                        <div class="photo-item" data-src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop">
+                            <img src="../Killua.jpg" alt="Lago" class="photo-img">
+                            <div class="photo-overlay">
+                                <div class="photo-title">anime</div>
+                                <div class="photo-info">Reflexão</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para visualização de imagens -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <img src="" alt="" class="modal-img" id="modalImg">
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        let isDark = false;
+
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            themeToggle.textContent = isDark ? '☀ Claro' : '🌙 Escuro';
+        });
+
+        // Sidebar toggle for mobile
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            mainContent.classList.toggle('sidebar-open');
+            overlay.classList.toggle('show');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            mainContent.classList.remove('sidebar-open');
+            overlay.classList.remove('show');
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');

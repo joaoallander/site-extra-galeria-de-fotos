@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelVault - Galeria Profissional</title>
+    <link rel="shortcut icon" href="../Por do sol ☀️.jpg" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --pink: #ec4899;
+            --orange: #f97316;
+            
+            /* Light theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-overlay: rgba(255, 255, 255, 0.95);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --blur: blur(20px);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --bg-card: #1e293b;
+            --bg-overlay: rgba(15, 23, 42, 0.95);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: #334155;
+            --border-light: #475569;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: var(--bg-overlay);
+            backdrop-filter: var(--blur);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .logo i {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3.5rem;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.25rem;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .search-filters {
+            position: absolute;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-chip {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip:hover,
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            position: relative;
+            background: none;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .nav-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: var(--error);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: rotate(180deg);
+        }
+
+        .profile-menu {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .profile-trigger:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            border-radius: 50%;
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .profile-info h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .profile-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        .main {
+            margin-top: 100px;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 100px;
+            width: 280px;
+            height: calc(100vh - 100px);
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+            overflow-y: auto;
+            z-index: 100;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            padding: 0 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+        }
+
+        .sidebar-item:hover,
+        .sidebar-item.active {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-right-color: var(--primary);
+        }
+
+        .sidebar-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-item .count {
+            margin-left: auto;
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Content Area */
+        .content {
+            margin-left: 0;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content.with-sidebar {
+            margin-left: 280px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: white;
+            position: relative;
+        }
+
+        .stat-icon.photos { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+        .stat-icon.likes { background: linear-gradient(135deg, #ec4899, #f97316); }
+        .stat-icon.views { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .stat-icon.followers { background: linear-gradient(135deg, #10b981, #059669); }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Gallery Controls */
+        .gallery-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover,
+        .view-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .sort-select {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sort-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .gallery.masonry {
+            columns: 4;
+            column-gap: 2rem;
+        }
+
+        .gallery.masonry .photo-card {
+            break-inside: avoid;
+            margin-bottom: 2rem;
+        }
+
+        .photo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            group: hover;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .photo-container {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.1);
+            filter: brightness(0.8);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0) 0%,
+                rgba(0,0,0,0.1) 40%,
+                rgba(0,0,0,0.8) 100%
+            );
+            opacity: 0;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+        }
+
+        .photo-card:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .photo-actions-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .photo-actions-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 0.75rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 1rem;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1) translateY(-2px);
+        }
+
+        .action-btn.liked {
+            background: var(--error);
+            border-color: var(--error);
+        }
+
+        .action-btn.saved {
+            background: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .photo-info {
+            padding: 2rem;
+        }
+
+        .photo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .photo-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .photo-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tag {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tag:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .photo-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-item:hover {
+            color: var(--text-primary);
+        }
+
+        .stat-item i {
+            font-size: 1rem;
+        }
+
+        /* Playlists Section */
+        .playlists-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .create-playlist-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .create-playlist-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .playlists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .playlist-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playlist-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .playlist-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .playlist-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .playlist-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            aspect-ratio: 2/1;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .playlist-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .playlist-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .playlist-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .gallery.masonry {
+                columns: 3;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .content.with-sidebar {
+                margin-left: 0;
+            }
+            
+            .gallery.masonry {
+                columns: 2;
+            }
+            
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .search-container {
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .search-container {
+                order: 3;
+                flex-basis: 100%;
+                max-width: none;
+            }
+            
+            .nav-actions {
+                gap: 0.5rem;
+            }
+            
+            .profile-info {
+                display: none;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+            
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .gallery.masonry {
+                columns: 1;
+            }
+            
+            .gallery-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                padding: 1.5rem;
+            }
+            
+            .photo-info {
+                padding: 1.5rem;
+            }
+            
+            .playlists-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.5s ease forwards;
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <i class="fas fa-camera-retro"></i>
+                PixelVault
+            </a>
+
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Pesquisar fotos, artistas, coleções..." id="searchInput">
+                    <div class="search-filters">
+                        <span class="filter-chip active" data-filter="all">Todas</span>
+                        <span class="filter-chip" data-filter="recent">Recentes</span>
+                        <span class="filter-chip" data-filter="popular">Populares</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="nav-btn" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <button class="nav-btn" id="uploadBtn">
+                    <i class="fas fa-plus"></i>
+                </button>
+                
+                <button class="nav-btn" id="notificationsBtn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                
+                <button class="nav-btn" id="messagesBtn">
+                    <i class="fas fa-envelope"></i>
+                    <span class="notification-badge">7</span>
+                </button>
+
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+
+                <div class="profile-menu">
+                    <div class="profile-trigger">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h3>Ana Costa</h3>
+                            <p>Fotógrafa Pro</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Navegação</div>
+            <a href="#" class="sidebar-item active">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-compass"></i>
+                <span>Explorar</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-fire"></i>
+                <span>Trending</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-users"></i>
+                <span>Seguindo</span>
+                <span class="count">127</span>
+            </a>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Biblioteca</div>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-heart"></i>
+                <span>Curtidas</span>
+                <span class="count">1.2K</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-bookmark"></i>
+                <span>Salvos</span>
+                <span class="count">456</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-history"></i>
+                <span>Histórico</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-download"></i>
+                <span>Downloads</span>
+                <span class="count">89</span>
+            </a>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Coleções</div>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-layer-group"></i>
+                <span>Minhas Coleções</span>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-share-alt"></i>
+                <span>Compartilhadas</span>
+                <span class="count">5</span>
+            </a>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Categorias</div>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-mountain"></i>
+                <span>Natureza</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-building"></i>
+                <span>Arquitetura</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-portrait"></i>
+                <span>Retratos</span>
+            </a>
+            <a href="#" class="sidebar-item">
+                <i class="fas fa-city"></i>
+                <span>Urbano</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="content" id="content">
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-icon photos">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <div class="stat-number">2.4K</div>
+                    <div class="stat-label">Fotos Publicadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon likes">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-number">156K</div>
+                    <div class="stat-label">Total de Curtidas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon views">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-number">892K</div>
+                    <div class="stat-label">Visualizações</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon followers">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="stat-number">45.2K</div>
+                    <div class="stat-label">Seguidores</div>
+                </div>
+            </div>
+
+            <!-- Playlists Section -->
+            <div class="playlists-section">
+                <div class="section-header">
+                    <h2 class="section-title">Suas Coleções</h2>
+                    <button class="create-playlist-btn">
+                        <i class="fas fa-plus"></i>
+                        Nova Coleção
+                    </button>
+                </div>
+                <div class="playlists-grid" id="playlistsGrid">
+                    <!-- Playlists will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Gallery Controls -->
+            <div class="gallery-controls">
+                <div class="view-controls">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" data-view="masonry">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+                
+                <div class="sort-controls">
+                    <label for="sortSelect">Ordenar por:</label>
+                    <select class="sort-select" id="sortSelect">
+                        <option value="recent">Mais Recentes</option>
+                        <option value="popular">Mais Populares</option>
+                        <option value="likes">Mais Curtidas</option>
+                        <option value="views">Mais Visualizadas</option>
+                        <option value="downloads">Mais Baixadas</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Gallery -->
+            <div class="gallery" id="gallery">
+                <!-- Photos will be loaded here -->
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sample data
+        const photos = [
+            {
+                id: 1,
+                title: "Aurora Boreal Majestosa",
+                author: "Carlos Silva",
+                category: "natureza",
+                likes: 2847,
+                views: 15420,
+                downloads: 892,
+                comments: 156,
+                tags: ["aurora", "noite", "paisagem", "natureza"],
+                liked: false,
+                saved: false,
+                timestamp: new Date('2024-01-15')
+            },
+            {
+                id: 2,
+                title: "Arquitetura Futurista",
+                author: "Marina Santos",
+                category: "arquitetura",
+                likes: 1923,
+                views: 8765,
+                downloads: 445,
+                comments: 89,
+                tags: ["prédio", "moderno", "cidade", "arquitetura"],
+                liked: true,
+                saved: false,
+                timestamp: new Date('2024-01-14')
+            },
+            {
+                id: 3,
+                title: "Retrato Cinematográfico",
+                author: "João Oliveira",
+                category: "retrato",
+                likes: 3456,
+                views: 21340,
+                downloads: 1234,
+                comments: 234,
+                tags: ["retrato", "cinema", "drama", "pessoa"],
+                liked: false,
+                saved: true,
+                timestamp: new Date('2024-01-13')
+            },
+            {
+                id: 4,
+                title: "Arte Urbana Vibrante",
+                author: "Ana Costa",
+                category: "urbano",
+                likes: 1567,
+                views: 9876,
+                downloads: 567,
+                comments: 123,
+                tags: ["street art", "colorido", "urbano", "arte"],
+                liked: true,
+                saved: true,
+                timestamp: new Date('2024-01-12')
+            },
+            {
+                id: 5,
+                title: "Floresta Encantada",
+                author: "Pedro Lima",
+                category: "natureza",
+                likes: 2134,
+                views: 12456,
+                downloads: 789,
+                comments: 167,
+                tags: ["floresta", "verde", "natureza", "árvores"],
+                liked: false,
+                saved: false,
+                timestamp: new Date('2024-01-11')
+            },
+            {
+                id: 6,
+                title: "Café Artesanal",
+                author: "Sofia Mendes",
+                category: "urbano",
+                likes: 987,
+                views: 5432,
+                downloads: 234,
+                comments: 67,
+                tags: ["café", "artesanal", "bebida", "lifestyle"],
+                liked: false,
+                saved: false,
+                timestamp: new Date('2024-01-10')
+            }
+        ];
+
+        const playlists = [
+            {
+                id: 1,
+                name: "Paisagens Épicas",
+                count: 47,
+                preview: ["/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100"]
+            },
+            {
+                id: 2,
+                name: "Retratos Favoritos",
+                count: 23,
+                preview: ["/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100"]
+            },
+            {
+                id: 3,
+                name: "Arte Urbana",
+                count: 31,
+                preview: ["/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100"]
+            },
+            {
+                id: 4,
+                name: "Inspiração Diária",
+                count: 89,
+                preview: ["/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100", "/placeholder.svg?height=100&width=100"]
+            }
+        ];
+
+        // State
+        let currentFilter = 'all';
+        let currentView = 'grid';
+        let currentSort = 'recent';
+        let searchTerm = '';
+        let sidebarOpen = false;
+
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const searchInput = document.getElementById('searchInput');
+        const gallery = document.getElementById('gallery');
+        const loading = document.getElementById('loading');
+        const playlistsGrid = document.getElementById('playlistsGrid');
+
+        // Theme Toggle
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.body.setAttribute('data-theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+            
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+
+        // Sidebar Toggle
+        sidebarToggle.addEventListener('click', () => {
+            sidebarOpen = !sidebarOpen;
+            sidebar.classList.toggle('open', sidebarOpen);
+            content.classList.toggle('with-sidebar', sidebarOpen);
+        });
+
+        // Search
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value.toLowerCase();
+            filterAndDisplayPhotos();
+        });
+
+        // Filter chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                currentFilter = chip.getAttribute('data-filter');
+                filterAndDisplayPhotos();
+            });
+        });
+
+        // View controls
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentView = btn.getAttribute('data-view');
+                updateGalleryView();
+            });
+        });
+
+        // Sort control
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            filterAndDisplayPhotos();
+        });
+
+        // Functions
+        function updateGalleryView() {
+            gallery.className = `gallery ${currentView === 'masonry' ? 'masonry' : ''}`;
+        }
+
+        function filterAndDisplayPhotos() {
+            loading.style.display = 'flex';
+            gallery.innerHTML = '';
+
+            setTimeout(() => {
+                let filteredPhotos = [...photos];
+
+                // Apply filters
+                if (currentFilter !== 'all') {
+                    if (currentFilter === 'recent') {
+                        filteredPhotos = filteredPhotos.sort((a, b) => b.timestamp - a.timestamp);
+                    } else if (currentFilter === 'popular') {
+                        filteredPhotos = filteredPhotos.sort((a, b) => b.likes - a.likes);
+                    }
+                }
+
+                // Apply search
+                if (searchTerm) {
+                    filteredPhotos = filteredPhotos.filter(photo => 
+                        photo.title.toLowerCase().includes(searchTerm) ||
+                        photo.author.toLowerCase().includes(searchTerm) ||
+                        photo.category.toLowerCase().includes(searchTerm) ||
+                        photo.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+                    );
+                }
+
+                // Apply sort
+                switch (currentSort) {
+                    case 'popular':
+                        filteredPhotos.sort((a, b) => b.likes - a.likes);
+                        break;
+                    case 'likes':
+                        filteredPhotos.sort((a, b) => b.likes - a.likes);
+                        break;
+                    case 'views':
+                        filteredPhotos.sort((a, b) => b.views - a.views);
+                        break;
+                    case 'downloads':
+                        filteredPhotos.sort((a, b) => b.downloads - a.downloads);
+                        break;
+                    default:
+                        filteredPhotos.sort((a, b) => b.timestamp - a.timestamp);
+                }
+
+                loading.style.display = 'none';
+                displayPhotos(filteredPhotos);
+            }, 800);
+        }
+
+        function displayPhotos(photosToShow) {
+            photosToShow.forEach((photo, index) => {
+                const photoCard = document.createElement('div');
+                photoCard.className = 'photo-card fade-in';
+                photoCard.style.animationDelay = `${index * 0.1}s`;
+                
+                photoCard.innerHTML = `
+                    <div class="photo-container">
+                        <img src="/placeholder.svg?height=300&width=400" alt="${photo.title}" loading="lazy">
+                        <div class="photo-overlay">
+                            <div class="photo-actions-top">
+                                <div class="action-group">
+                                    <button class="action-btn ${photo.liked ? 'liked' : ''}" data-action="like" data-id="${photo.id}">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn ${photo.saved ? 'saved' : ''}" data-action="save" data-id="${photo.id}">
+                                        <i class="fas fa-bookmark"></i>
+                                    </button>
+                                </div>
+                                <div class="action-group">
+                                    <button class="action-btn" data-action="share" data-id="${photo.id}">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                    <button class="action-btn" data-action="download" data-id="${photo.id}">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="photo-actions-bottom">
+                                <div class="action-group">
+                                    <button class="action-btn" data-action="fullscreen" data-id="${photo.id}">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                    <button class="action-btn" data-action="info" data-id="${photo.id}">
+                                        <i class="fas fa-info"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="photo-info">
+                        <div class="photo-header">
+                            <div>
+                                <h3 class="photo-title">${photo.title}</h3>
+                                <div class="photo-author">
+                                    <div class="author-avatar">${photo.author.charAt(0)}</div>
+                                    <span>${photo.author}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="photo-tags">
+                            ${photo.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+                        <div class="photo-stats">
+                            <div class="stat-group">
+                                <div class="stat-item">
+                                    <i class="fas fa-heart"></i>
+                                    <span>${formatNumber(photo.likes)}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-eye"></i>
+                                    <span>${formatNumber(photo.views)}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-comment"></i>
+                                    <span>${formatNumber(photo.comments)}</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-download"></i>
+                                <span>${formatNumber(photo.downloads)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Add event listeners for actions
+                photoCard.querySelectorAll('.action-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        handlePhotoAction(btn.getAttribute('data-action'), btn.getAttribute('data-id'), btn);
+                    });
+                });
+
+                gallery.appendChild(photoCard);
+            });
+        }
+
+        function displayPlaylists() {
+            playlists.forEach((playlist, index) => {
+                const playlistCard = document.createElement('div');
+                playlistCard.className = 'playlist-card slide-in-left';
+                playlistCard.style.animationDelay = `${index * 0.1}s`;
+                
+                playlistCard.innerHTML = `
+                    <div class="playlist-preview">
+                        ${playlist.preview.map(img => `<img src="${img}" alt="Preview">`).join('')}
+                    </div>
+                    <div class="playlist-info">
+                        <h3>${playlist.name}</h3>
+                        <div class="playlist-meta">
+                            <span>${playlist.count} fotos</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                `;
+
+                playlistsGrid.appendChild(playlistCard);
+            });
+        }
+
+        function handlePhotoAction(action, photoId, button) {
+            const photo = photos.find(p => p.id == photoId);
+            
+            switch (action) {
+                case 'like':
+                    photo.liked = !photo.liked;
+                    photo.likes += photo.liked ? 1 : -1;
+                    button.classList.toggle('liked', photo.liked);
+                    updatePhotoStats(photoId);
+                    break;
+                case 'save':
+                    photo.saved = !photo.saved;
+                    button.classList.toggle('saved', photo.saved);
+                    break;
+                case 'share':
+                    navigator.share ? navigator.share({
+                        title: photo.title,
+                        text: `Confira esta foto incrível: ${photo.title}`,
+                        url: window.location.href
+                    }) : alert('Compartilhamento não suportado');
+                    break;
+                case 'download':
+                    photo.downloads++;
+                    updatePhotoStats(photoId);
+                    // Simulate download
+                    const link = document.createElement('a');
+                    link.href = '/placeholder.svg?height=1200&width=1600';
+                    link.download = `${photo.title}.jpg`;
+                    link.click();
+                    break;
+                case 'fullscreen':
+                    // Implement fullscreen view
+                    alert('Modo tela cheia em desenvolvimento');
+                    break;
+                case 'info':
+                    alert(`Informações da foto:\n\nTítulo: ${photo.title}\nAutor: ${photo.author}\nCurtidas: ${photo.likes}\nVisualizações: ${photo.views}`);
+                    break;
+            }
+        }
+
+        function updatePhotoStats(photoId) {
+            const photo = photos.find(p => p.id == photoId);
+            const photoCard = document.querySelector(`[data-id="${photoId}"]`).closest('.photo-card');
+            const likesSpan = photoCard.querySelector('.stat-item:first-child span');
+            const downloadsSpan = photoCard.querySelector('.stat-group + .stat-item span');
+            
+            if (likesSpan) likesSpan.textContent = formatNumber(photo.likes);
+            if (downloadsSpan) downloadsSpan.textContent = formatNumber(photo.downloads);
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        // Initialize
+        filterAndDisplayPhotos();
+        displayPlaylists();
+
+        // Add some interactive effects
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.stat-card, .photo-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 10;
+                    const rotateY = (centerX - x) / 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+                } else {
+                    card.style.transform = '';
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'k':
+                        e.preventDefault();
+                        searchInput.focus();
+                        break;
+                    case 'b':
+                        e.preventDefault();
+                        sidebarToggle.click();
+                        break;
+                    case 'd':
+                        e.preventDefault();
+                        themeToggle.click();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
